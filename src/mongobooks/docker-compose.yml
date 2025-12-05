@@ -1,0 +1,29 @@
+services:
+  mongodb:
+    image: mongo:8.2.2-noble
+    container_name: mongodb
+    ports:
+      - "27017:27017" # Map host port 27017 to container port 27017
+    volumes:
+      - ./mongodb_data:/data/db # Persist data outside the container
+    environment:
+      # Set root username and password for initial setup
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+
+
+  #   mongo-express:
+  #     image: mongo-express:latest
+  #     container_name: mongo_express_container
+  #     ports:
+  #       - "8081:8081" # Map host port 8081 to container port 8081
+  #     environment:
+  #       ME_CONFIG_MONGODB_SERVER: mongodb # Connect to the 'mongodb' service
+  #       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+  #       ME_CONFIG_MONGODB_ADMINPASSWORD: password
+  #     links:
+  #       - mongodb
+  #     restart: always
+
+  # volumes:
+  #   mongodb_data: # Define the named volume for data persistence
