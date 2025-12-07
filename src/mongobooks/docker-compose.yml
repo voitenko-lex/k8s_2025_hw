@@ -3,14 +3,31 @@ services:
     image: mongo:8.2.2-noble
     container_name: mongodb
     ports:
-      - "27017:27017" # Map host port 27017 to container port 27017
+      - "$DB_PORT:27017" 
     volumes:
-      - ./mongodb_data:/data/db # Persist data outside the container
+      - mongodb_data:/data/db # Persist data outside the container
     environment:
       # Set root username and password for initial setup
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_ROOT_USERNAME=$DB_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$DB_PASS
 
+
+  mongobooks:
+    image: sliderx/mongobooks:0.1
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: mongobooks
+    environment:
+      # Set root username and password for initial setup
+      - DB_USER=$DB_USER
+      - DB_PASS=$DB_PASS
+      - DB_HOST=$DB_HOST
+      - DB_PORT=$DB_PORT
+    ports:
+      - "8080:8080" 
+    depends_on:
+      - mongodb
 
   #   mongo-express:
   #     image: mongo-express:latest
@@ -25,5 +42,5 @@ services:
   #       - mongodb
   #     restart: always
 
-  # volumes:
-  #   mongodb_data: # Define the named volume for data persistence
+volumes:
+  mongodb_data: # Define the named volume for data persistence
