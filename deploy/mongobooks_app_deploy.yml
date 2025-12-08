@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongobooks-app
+  labels:
+    app: mongobooks
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: mongobooks
+      service: app
+  template:
+    metadata:
+      labels:
+        app: mongobooks
+        service: app
+    spec:
+      containers:
+      - name: mongobooks-app
+        image: sliderx/mongobooks:0.1
+        env:
+        - name: DB_USER
+          value: "admin"
+        - name: DB_PASS
+          value: "password"
+        - name: DB_HOST
+          value: "mongobooks-db"
+        # readinessProbe:
+        #   httpGet:
+        #     path: /books
+        #     port: 8080
+        #   initialDelaySeconds: 3
+        #   periodSeconds: 5
+        #   timeoutSeconds: 2
+        #   failureThreshold: 3
+        #   successThreshold: 1
+
